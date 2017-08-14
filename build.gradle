@@ -6,7 +6,7 @@ apply plugin: 'maven'
 apply plugin: 'java-library'
 
 group = 'io.airbrake'
-version = '0.0.1'
+version = '0.1.0'
 
 repositories {
     jcenter()
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.airbrake:javabrake:0.0.1'
+    compile 'io.airbrake:javabrake:0.1.0'
     compile 'log4j:log4j:1.2.16'
 
     testImplementation 'junit:junit:4.12'
