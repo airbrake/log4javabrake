@@ -1,12 +1,15 @@
 package io.airbrake.log4javabrake;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 import org.apache.log4j.spi.LocationInfo;
-import java.util.ArrayList;
-import java.util.List;
+
 import io.airbrake.javabrake.Notifier;
 import io.airbrake.javabrake.Airbrake;
 import io.airbrake.javabrake.NoticeError;
@@ -20,10 +23,36 @@ public class AirbrakeAppender extends AppenderSkeleton {
 
   @Override
   protected void append(LoggingEvent event) {
-    Throwable throwable = this.throwable(event);
-    if (throwable != null) {
-      Airbrake.report(throwable);
-      return;
+    Notice notice = newNotice(event);
+    notice.setContext("level", formatLevel(event.getLevel()));
+    notice.setParam("threadName", event.getThreadName());
+    if (event.getNDC() != null) {
+      notice.setParam("ndc", event.getNDC());
+    }
+    Map props = event.getProperties();
+    if (props.size() > 0) {
+      notice.setParam("properties", props);
+    }
+    Airbrake.send(notice);
+  }
+
+  @Override
+  public void close() {}
+
+  @Override
+  public boolean requiresLayout() {
+    return false;
+  }
+
+  static Notice newNotice(LoggingEvent event) {
+    ThrowableInformation info = event.getThrowableInformation();
+    if (info != null) {
+      return new Notice(info.getThrowable());
+    }
+
+    Object msg = event.getMessage();
+    if (msg instanceof Throwable) {
+      return new Notice((Throwable) msg);
     }
 
     String type = event.getLoggerName();
@@ -46,29 +75,25 @@ public class AirbrakeAppender extends AppenderSkeleton {
     List<NoticeError> errors = new ArrayList<>();
     errors.add(err);
 
-    Notice notice = new Notice(errors);
-    Airbrake.send(notice);
+    return new Notice(errors);
   }
 
-  @Override
-  public void close() {}
-
-  @Override
-  public boolean requiresLayout() {
-    return false;
-  }
-
-  Throwable throwable(LoggingEvent event) {
-    ThrowableInformation info = event.getThrowableInformation();
-    if (info != null) {
-      return info.getThrowable();
+  static String formatLevel(Level level) {
+    if (level.isGreaterOrEqual(Level.FATAL)) {
+      return "critical";
     }
-
-    Object msg = event.getMessage();
-    if (msg instanceof Throwable) {
-      return (Throwable) msg;
+    if (level.isGreaterOrEqual(Level.ERROR)) {
+      return "error";
     }
-
-    return null;
+    if (level.isGreaterOrEqual(Level.WARN)) {
+      return "warn";
+    }
+    if (level.isGreaterOrEqual(Level.INFO)) {
+      return "info";
+    }
+    if (level.isGreaterOrEqual(Level.DEBUG)) {
+      return "debug";
+    }
+    return "trace";
   }
 }

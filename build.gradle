@@ -10,13 +10,10 @@ version = '0.1.0'
 
 repositories {
     jcenter()
-    maven {
-        url 'http://dl.bintray.com/airbrake/maven'
-    }
 }
 
 dependencies {
-    compile 'io.airbrake:javabrake:0.1.0'
+    compile 'io.airbrake:javabrake:0.1.1'
     compile 'log4j:log4j:1.2.16'
 
     testImplementation 'junit:junit:4.12'
