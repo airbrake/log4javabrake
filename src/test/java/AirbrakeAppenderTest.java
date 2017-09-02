@@ -46,9 +46,9 @@ public class AirbrakeAppenderTest {
     assertEquals("io.airbrake.log4javabrake.AirbrakeAppenderTest", err.type);
     assertEquals("hello from Java", err.message);
 
-    NoticeStackRecord record = err.backtrace.get(0);
+    NoticeStackRecord record = err.backtrace[0];
     assertEquals("testLogMessage", record.function);
-    assertEquals("AirbrakeAppenderTest.java", record.file);
+    assertEquals("test/io/airbrake/log4javabrake/AirbrakeAppenderTest.class", record.file);
     assertEquals(43, record.line);
   }
 }
