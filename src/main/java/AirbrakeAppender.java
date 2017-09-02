@@ -57,20 +57,19 @@ public class AirbrakeAppender extends AppenderSkeleton {
 
     String type = event.getLoggerName();
     String message = event.getRenderedMessage();
-    List<NoticeStackRecord> backtrace = null;
+    StackTraceElement[] stackTrace = null;
 
     LocationInfo loc = event.getLocationInformation();
     if (loc != null) {
-      String function = loc.getMethodName();
+      String className = loc.getClassName();
+      String method = loc.getMethodName();
       String file = loc.getFileName();
       int line = Integer.parseInt(loc.getLineNumber());
-      NoticeStackRecord rec = new NoticeStackRecord(function, file, line);
-
-      backtrace = new ArrayList<>();
-      backtrace.add(rec);
+      stackTrace = new StackTraceElement[1];
+      stackTrace[0] = new StackTraceElement(className, method, file, line);
     }
 
-    NoticeError err = new NoticeError(type, message, backtrace);
+    NoticeError err = new NoticeError(type, message, stackTrace);
 
     List<NoticeError> errors = new ArrayList<>();
     errors.add(err);
