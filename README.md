@@ -25,7 +25,7 @@ Ivy:
 
 ```xml
 <dependency org='io.airbrake' name='log4javabrake' rev='0.1.2'>
-  <artifact name='javabrake' ext='pom'></artifact>
+  <artifact name='log4javabrake' ext='pom'></artifact>
 </dependency>
 ```
 

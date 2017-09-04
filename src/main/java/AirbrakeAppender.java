@@ -24,7 +24,7 @@ public class AirbrakeAppender extends AppenderSkeleton {
   @Override
   protected void append(LoggingEvent event) {
     Notice notice = newNotice(event);
-    notice.setContext("level", formatLevel(event.getLevel()));
+    notice.setContext("severity", formatLevel(event.getLevel()));
     notice.setParam("threadName", event.getThreadName());
     if (event.getNDC() != null) {
       notice.setParam("ndc", event.getNDC());
