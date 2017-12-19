@@ -17,7 +17,6 @@ Maven:
   <groupId>io.airbrake</groupId>
   <artifactId>log4javabrake</artifactId>
   <version>0.1.3</version>
-  <type>pom</type>
 </dependency>
 ```
 
