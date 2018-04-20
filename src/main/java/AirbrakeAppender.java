@@ -3,6 +3,7 @@ package io.airbrake.log4javabrake;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
@@ -17,8 +18,15 @@ import io.airbrake.javabrake.Notice;
 import io.airbrake.javabrake.NoticeStackRecord;
 
 public class AirbrakeAppender extends AppenderSkeleton {
+  Notifier notifier;
+
   public AirbrakeAppender() {
     setThreshold(Level.ERROR);
+  }
+
+  public AirbrakeAppender(int projectId, String projectKey) {
+    this();
+    this.notifier = new Notifier(projectId, projectKey);
   }
 
   @Override
@@ -33,7 +41,7 @@ public class AirbrakeAppender extends AppenderSkeleton {
     if (props.size() > 0) {
       notice.setParam("properties", props);
     }
-    Airbrake.send(notice);
+    this.send(notice);
   }
 
   @Override
@@ -94,5 +102,12 @@ public class AirbrakeAppender extends AppenderSkeleton {
       return "debug";
     }
     return "trace";
+  }
+
+  Future<Notice> send(Notice notice) {
+    if (this.notifier != null) {
+      return this.notifier.send(notice);
+    }
+    return Airbrake.send(notice);
   }
 }
