@@ -7,7 +7,7 @@
 Gradle:
 
 ```gradle
-compile 'io.airbrake:log4javabrake:0.1.3'
+compile 'io.airbrake:log4javabrake:0.1.4'
 ```
 
 Maven:
@@ -16,14 +16,14 @@ Maven:
 <dependency>
   <groupId>io.airbrake</groupId>
   <artifactId>log4javabrake</artifactId>
-  <version>0.1.3</version>
+  <version>0.1.4</version>
 </dependency>
 ```
 
 Ivy:
 
 ```xml
-<dependency org='io.airbrake' name='log4javabrake' rev='0.1.3'>
+<dependency org='io.airbrake' name='log4javabrake' rev='0.1.4'>
   <artifact name='log4javabrake' ext='pom'></artifact>
 </dependency>
 ```
@@ -40,6 +40,9 @@ log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=[%d,%p] [%c{1}.%M:%L] %m%n
 
 log4j.appender.airbrake=io.airbrake.log4javabrake.AirbrakeAppender
+log4j.appender.airbrake.projectId=12345
+log4j.appender.airbrake.projectKey=FIXME
+log4j.appender.airbrake.env=production
 ```
 
 Using Java:
@@ -48,5 +51,7 @@ Using Java:
 import org.apache.log4j.Logger;
 import io.airbrake.log4javabrake.AirbrakeAppender;
 
-Logger.getRootLogger().addAppender(new AirbrakeAppender());
+int projectId = 12345;
+String projectKey = "FIXME";
+Logger.getRootLogger().addAppender(new AirbrakeAppender(projectId, projectKey));
 ```

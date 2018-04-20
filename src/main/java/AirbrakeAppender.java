@@ -18,6 +18,9 @@ import io.airbrake.javabrake.Notice;
 import io.airbrake.javabrake.NoticeStackRecord;
 
 public class AirbrakeAppender extends AppenderSkeleton {
+  int projectId;
+  String projectKey;
+  String env;
   Notifier notifier;
 
   public AirbrakeAppender() {
@@ -26,12 +29,37 @@ public class AirbrakeAppender extends AppenderSkeleton {
 
   public AirbrakeAppender(int projectId, String projectKey) {
     this();
+    this.setProjectId(projectId);
+    this.setProjectKey(projectKey);
+  }
+
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+    this.initNotifier();
+  }
+
+  public void setProjectKey(String projectKey) {
+    this.projectKey = projectKey;
+    this.initNotifier();
+  }
+
+  public void setEnv(String env) {
+    this.env = env;
+  }
+
+  void initNotifier() {
+    if (this.projectId == 0 || this.projectKey == null) {
+      return;
+    }
     this.notifier = new Notifier(projectId, projectKey);
   }
 
   @Override
   protected void append(LoggingEvent event) {
     Notice notice = newNotice(event);
+    if (this.env != null) {
+      notice.setContext("environment", this.env);
+    }
     notice.setContext("severity", formatLevel(event.getLevel()));
     notice.setParam("threadName", event.getThreadName());
     if (event.getNDC() != null) {
