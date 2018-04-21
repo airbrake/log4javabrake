@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.BeforeClass;
-import io.airbrake.javabrake.NoticeStackRecord;
+import io.airbrake.javabrake.NoticeStackFrame;
 
 public class AirbrakeAppenderTest {
   Notifier notifier = new Notifier(0, "");
@@ -46,9 +46,9 @@ public class AirbrakeAppenderTest {
     assertEquals("io.airbrake.log4javabrake.AirbrakeAppenderTest", err.type);
     assertEquals("hello from Java", err.message);
 
-    NoticeStackRecord record = err.backtrace[0];
-    assertEquals("testLogMessage", record.function);
-    assertEquals("test/io/airbrake/log4javabrake/AirbrakeAppenderTest.class", record.file);
-    assertEquals(43, record.line);
+    NoticeStackFrame frame = err.backtrace[0];
+    assertEquals("testLogMessage", frame.function);
+    assertEquals("test/io/airbrake/log4javabrake/AirbrakeAppenderTest.class", frame.file);
+    assertEquals(43, frame.line);
   }
 }
