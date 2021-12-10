@@ -1,3 +1,11 @@
+# ⚠️ This project has been archived ⚠️
+Since log4j V1 is EOL this repository has been archived. We recomend you use [log4javabrake2 instead](https://github.com/airbrake/log4javabrake2).
+
+
+<hr>
+
+<details><summary>Pre-archive README contents</summary>
+
 # log4j appender for javabrake
 
 [![Build Status](https://travis-ci.org/airbrake/log4javabrake.svg?branch=master)](https://travis-ci.org/airbrake/log4javabrake)
@@ -55,3 +63,5 @@ int projectId = 12345;
 String projectKey = "FIXME";
 Logger.getRootLogger().addAppender(new AirbrakeAppender(projectId, projectKey));
 ```
+
+</details>
